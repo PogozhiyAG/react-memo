@@ -29,8 +29,16 @@ export function SelectLevelPage() {
           </li>
         </ul>
         <div>
-          <input id="cb-mode" type="checkbox" value={mode} onChange={e => setMode(e.target.checked)} />
-          <label for="cb-mode">Упрощенный режим</label>
+          <input
+            id="cb-mode"
+            type="checkbox"
+            value={mode}
+            className={styles.checkbox}
+            onChange={e => setMode(e.target.checked)}
+          />
+          <label for="cb-mode" className={styles.checkboxLabel}>
+            Легкий режим (3 жизни)
+          </label>
         </div>
       </div>
     </div>
