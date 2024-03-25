@@ -10,9 +10,8 @@ import { LeaderboardContext } from "../../context/LeaderboardContext";
 export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameDurationSeconds, onClick }) {
   const [isNeedSubmitResults, setIsNeedSubmitResults] = useState(false);
   const [user, setUser] = useState();
+  const [title, setTitle] = useState(isWon ? "Вы победили!" : "Вы проиграли!");
   const { leaderBoard, loadLeaders, resultIsInLeaderBoard, sendGameResult } = useContext(LeaderboardContext);
-
-  const title = isWon ? "Вы победили!" : "Вы проиграли!";
 
   const imgSrc = isWon ? celebrationImageUrl : deadImageUrl;
 
@@ -30,6 +29,7 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
     if (isWon && useLeaderBoard) {
       const isInLeaderBoard = resultIsInLeaderBoard(duration);
       setIsNeedSubmitResults(isInLeaderBoard);
+      setTitle("Вы попали на лидерборд!");
     }
   }, [leaderBoard]);
 
