@@ -44,6 +44,12 @@
   line-height: 72px;
 }
 
+.tries {
+  color:#fff;
+  font-family: StratosSkyeng;
+  font-size: 64px;
+}
+
 .previewText {
   font-size: 30px;
   line-height: 30px;
