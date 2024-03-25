@@ -13,6 +13,12 @@ export const LeaderboardPage = () => {
     loadLeaders();
   }, []);
 
+  const formatTime = duration => {
+    const minutes = Math.floor(duration / 60);
+    const seconds = duration - minutes * 60;
+    return minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -37,7 +43,7 @@ export const LeaderboardPage = () => {
             <React.Fragment key={i}>
               <div className={styles.tableCell}># {i + 1}</div>
               <div className={styles.tableCell}>{r.name}</div>
-              <div className={styles.tableCell}>{r.time}</div>
+              <div className={styles.tableCell}>{formatTime(r.time)}</div>
             </React.Fragment>
           ))}
         </div>
