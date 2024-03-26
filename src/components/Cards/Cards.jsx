@@ -61,10 +61,10 @@ export function Cards({ pairsCount = 3, tryCount = 1, previewSeconds = 5 }) {
   // Количество оставшихся попыток
   const [triesRemain, setTriesRemain] = useState(tryCount);
 
-  function finishGame(status = STATUS_LOST) {
+  const finishGame = (status = STATUS_LOST) => {
     setGameEndDate(new Date());
     setStatus(status);
-  }
+  };
   function startGame() {
     const startDate = new Date();
     setGameEndDate(null);
@@ -132,7 +132,7 @@ export function Cards({ pairsCount = 3, tryCount = 1, previewSeconds = 5 }) {
 
     // "Игрок проиграл", т.к на поле есть две открытые карты без пары
     if (playerLost) {
-      var tries = triesRemain - 1;
+      const tries = triesRemain - 1;
       setTriesRemain(tries);
 
       if (tries <= 0) {
@@ -227,6 +227,7 @@ export function Cards({ pairsCount = 3, tryCount = 1, previewSeconds = 5 }) {
         <div className={styles.modalContainer}>
           <EndGameModal
             isWon={status === STATUS_WON}
+            useLeaderBoard={pairsCount >= 1}
             gameDurationSeconds={timer.seconds}
             gameDurationMinutes={timer.minutes}
             onClick={resetGame}

@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./SelectLevelPage.module.css";
 import { useState } from "react";
+import { Button } from "../../components/Button/Button";
 
 export function SelectLevelPage() {
   const [mode, setMode] = useState(false);
+  const navigateTo = useNavigate();
 
   const tryCount = mode ? 3 : 1;
 
@@ -29,8 +31,24 @@ export function SelectLevelPage() {
           </li>
         </ul>
         <div>
-          <input id="cb-mode" type="checkbox" value={mode} onChange={e => setMode(e.target.checked)} />
-          <label for="cb-mode">Упрощенный режим</label>
+          <input
+            id="cb-mode"
+            type="checkbox"
+            value={mode}
+            className={styles.checkbox}
+            onChange={e => setMode(e.target.checked)}
+          />
+          <label htmlFor="cb-mode" className={styles.checkboxLabel}>
+            Легкий режим (3 жизни)
+          </label>
+        </div>
+        <div className={styles.contentRow}>
+          <Button onClick={() => navigateTo(`/game/3/${tryCount}`)}>Играть</Button>
+        </div>
+        <div className={styles.contentRow}>
+          <Link to="/leaderboard" className={styles.link}>
+            Перейти к лидерборду
+          </Link>
         </div>
       </div>
     </div>
