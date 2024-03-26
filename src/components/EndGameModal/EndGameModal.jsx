@@ -48,7 +48,12 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
       <img className={styles.image} src={imgSrc} alt={imgAlt} />
       <h2 className={styles.title}>{title}</h2>
       {isNeedSubmitResults && (
-        <input value={user} onChange={e => setUser(e.target.value)} placeholder="Пользователь"></input>
+        <input
+          value={user}
+          onChange={e => setUser(e.target.value)}
+          placeholder="Пользователь"
+          className={styles.inputText}
+        ></input>
       )}
       <p className={styles.description}>Затраченное время:</p>
       <div className={styles.time}>
