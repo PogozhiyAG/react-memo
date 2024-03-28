@@ -31,6 +31,10 @@ export const SuperForces = {
           .filter(c => c.suit === closedCards[0].suit && c.rank === closedCards[0].rank)
           .forEach(c => (c.open = true));
         game.refreshCards();
+
+        if (game.cards.filter(card => card.open).length === game.cards.length) {
+          game.Won();
+        }
       }
     },
   },

@@ -1,5 +1,5 @@
 const API_URL = {
-  leaderboard: "https://wedev-api.sky.pro/api/leaderboard",
+  leaderboard: "https://wedev-api.sky.pro/api/v2/leaderboard",
 };
 
 export const getLeaderBoard = () =>
@@ -7,12 +7,13 @@ export const getLeaderBoard = () =>
     method: "GET",
   }).then(r => r.json());
 
-export const postLeaderBoard = ({ name, time }) => {
+export const postLeaderBoard = ({ name, time, achievements }) => {
   return fetch(API_URL.leaderboard, {
     method: "POST",
     body: JSON.stringify({
       name,
       time,
+      achievements,
     }),
   }).then(r => r.json());
 };

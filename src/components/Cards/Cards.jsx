@@ -12,7 +12,7 @@ import { SuperForce } from "../SuperForce/SuperForce";
  * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
  */
 export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
-  const game = useGame({ level, tryCount });
+  const game = useGame({ level, tryCount, availableSuperForces: { 1: 1, 2: 2 } });
 
   const isGameEnded = game.gameStatus === STATUS_LOST || game.gameStatus === STATUS_WON;
   const elapsed = game.timer.getElapsed();
@@ -44,8 +44,8 @@ export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
           <>
             <div className={styles.tries}>❤: {game.tries}</div>
             <div className={styles.superforcesComtainer}>
-              {Object.keys(game.superForces).map(k => (
-                <SuperForce id={k} count={game.superForces[k]} onClick={() => game.useSuperForce(k)} />
+              {Object.keys(game.superForces).map((k, i) => (
+                <SuperForce key={i} id={k} count={game.superForces[k]} onClick={() => game.useSuperForce(k)} />
               ))}
             </div>
             <Button onClick={game.reset}>Начать заново</Button>
@@ -67,13 +67,7 @@ export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
 
       {isGameEnded ? (
         <div className={styles.modalContainer}>
-          <EndGameModal
-            isWon={game.gameStatus === STATUS_WON}
-            useLeaderBoard={level >= 3}
-            gameDurationSeconds={elapsed.seconds}
-            gameDurationMinutes={elapsed.minutes}
-            onClick={game.reset}
-          />
+          <EndGameModal game={game} />
         </div>
       ) : null}
     </div>

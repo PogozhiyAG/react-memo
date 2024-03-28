@@ -20,6 +20,9 @@ export const STATUS_WON = "STATUS_WON";
 export const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 export const STATUS_PREVIEW = "STATUS_PREVIEW";
 
+export const EVENT_TYPE_USE_SUPERFORCE = "USE_SUPERFORCE";
+export const EVENT_TYPE_USE_LIFE = "USE_LIFE";
+
 export const useGame = ({
   level = 1,
   tryCount = 1,
@@ -32,6 +35,7 @@ export const useGame = ({
   const timer = useStopwatch({ resolution: 300 });
   const [isReadOnly, setIsReadOnly] = useState();
   const [gameStatus, setGameStatus] = useState();
+  const [gameLog, setGameLog] = useState([]);
 
   const [resetFlag, setResetFlag] = useState();
   const [startFlag, setStartFlag] = useState();
@@ -47,6 +51,7 @@ export const useGame = ({
     setTries(tryCount);
     setSuperForces({ ...availableSuperForces });
     setIsReadOnly(true);
+    setGameLog([]);
     timer.reset();
     setStartFlag(new Date());
   }, [resetFlag]);
@@ -77,6 +82,16 @@ export const useGame = ({
     setGameStatus(STATUS_LOST);
   };
 
+  const logEvent = (eventType, data) =>
+    setGameLog([
+      ...gameLog,
+      {
+        time: new Date(),
+        eventType,
+        data,
+      },
+    ]);
+
   const pickCard = card => {
     if (isReadOnly || card.open || gameStatus !== STATUS_IN_PROGRESS) {
       return;
@@ -104,6 +119,7 @@ export const useGame = ({
     if (cardsWithotPair >= 2) {
       if (tries > 1) {
         setTries(tries - 1);
+        logEvent(EVENT_TYPE_USE_LIFE);
         return;
       }
       Lost();
@@ -123,17 +139,22 @@ export const useGame = ({
         [forceId]: superForces[forceId] - 1,
       });
 
+      logEvent(EVENT_TYPE_USE_SUPERFORCE, forceId);
+
       SuperForces[forceId].use(gameContext);
     }
   };
 
   //game state
   const gameContext = {
+    level,
+
     cards,
     setCards,
 
     tries,
     setTries,
+    tryCount,
 
     gameStatus,
     setGameStatus,
@@ -145,6 +166,11 @@ export const useGame = ({
     setSuperForces,
 
     timer,
+
+    gameLog,
+
+    Won,
+    Lost,
 
     refreshCards,
     pickCard,
