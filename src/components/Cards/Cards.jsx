@@ -3,6 +3,7 @@ import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { STATUS_IN_PROGRESS, STATUS_LOST, STATUS_PREVIEW, STATUS_WON, useGame } from "../../hooks/useGame";
+import { SuperForce } from "../SuperForce/SuperForce";
 
 /**
  * Основной компонент игры, внутри него находится вся игровая механика и логика.
@@ -39,8 +40,17 @@ export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
             </>
           )}
         </div>
-        {game.gameStatus === STATUS_IN_PROGRESS ? <div className={styles.tries}>❤: {game.tries}</div> : null}
-        {game.gameStatus === STATUS_IN_PROGRESS ? <Button onClick={game.reset}>Начать заново</Button> : null}
+        {game.gameStatus === STATUS_IN_PROGRESS && (
+          <>
+            <div className={styles.tries}>❤: {game.tries}</div>
+            <div className={styles.superforcesComtainer}>
+              {Object.keys(game.superForces).map(k => (
+                <SuperForce id={k} count={game.superForces[k]} onClick={() => game.useSuperForce(k)} />
+              ))}
+            </div>
+            <Button onClick={game.reset}>Начать заново</Button>
+          </>
+        )}
       </div>
 
       <div className={styles.cards}>

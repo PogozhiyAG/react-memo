@@ -77,3 +77,8 @@
 
   margin-bottom: -12px;
 }
+
+.superforcesComtainer{
+  display: flex;
+  gap: 12px
+}
