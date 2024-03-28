@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { generateDeck } from "../utils/cards";
 import { SuperForces } from "./useSuperForces";
-import { useTimer } from "./useTimer";
+import { useStopwatch } from "./useStopwatch";
+import { shuffle } from "lodash";
 
 const levelPairCount = {
   1: 3,
@@ -14,8 +15,8 @@ const defaultSuperforces = {
   2: 1,
 };
 
-// const STATUS_LOST = "STATUS_LOST";
-// const STATUS_WON = "STATUS_WON";
+const STATUS_LOST = "STATUS_LOST";
+const STATUS_WON = "STATUS_WON";
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
 const STATUS_PREVIEW = "STATUS_PREVIEW";
 
@@ -25,20 +26,35 @@ export const useGame = ({
   previewDuration = 5,
   availableSuperForces = { ...defaultSuperforces },
 }) => {
-  const [cards, setCards] = useState(generateDeck(levelPairCount[level]));
-  const [tries, setTries] = useState(tryCount);
-  const [superForces, setSuperForces] = useState(availableSuperForces);
-  const timer = useTimer({ resolution: 1000 });
-  const [isReadOnly, setIsReadOnly] = useState(true);
-  const [gameStatus, setGameStatus] = useState(STATUS_PREVIEW);
+  const [cards, setCards] = useState([]);
+  const [tries, setTries] = useState(0);
+  const [superForces, setSuperForces] = useState({});
+  const timer = useStopwatch({ resolution: 300 });
+  const [isReadOnly, setIsReadOnly] = useState();
+  const [gameStatus, setGameStatus] = useState();
+
+  const [resetFlag, setResetFlag] = useState();
+  const [startFlag, setStartFlag] = useState();
+
+  const reset = () => setResetFlag(new Date());
 
   const refreshCards = () => setCards([...cards]);
 
-  //preview => start game
   useEffect(() => {
-    cards.forEach(c => (c.open = true));
-    refreshCards();
+    setGameStatus(STATUS_PREVIEW);
+    const deck = shuffle(generateDeck(levelPairCount[level]).map(c => ({ ...c, open: true })));
+    setCards(deck);
+    setTries(tryCount);
+    setSuperForces({ ...availableSuperForces });
     setIsReadOnly(true);
+    timer.reset();
+    setStartFlag(new Date());
+  }, [resetFlag]);
+
+  useEffect(() => {
+    if (!startFlag) {
+      return;
+    }
 
     let timeout = setTimeout(() => {
       setGameStatus(STATUS_IN_PROGRESS);
@@ -49,19 +65,53 @@ export const useGame = ({
     }, previewDuration * 1000);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [startFlag]);
 
-  //Click the card
+  const Won = () => {
+    timer.stop();
+    setGameStatus(STATUS_WON);
+  };
+
+  const Lost = () => {
+    timer.stop();
+    setGameStatus(STATUS_LOST);
+  };
+
   const pickCard = card => {
-    if (isReadOnly) {
+    if (isReadOnly || card.open || gameStatus !== STATUS_IN_PROGRESS) {
       return;
     }
 
-    card.open = true;
-    refreshCards();
+    const openTheCard = () => {
+      card.open = true;
+      refreshCards();
+    };
+
+    const openCards = cards.filter(card => card.open).concat(card);
+    if (openCards.length === cards.length) {
+      openTheCard();
+      Won();
+      return;
+    }
+
+    const groups = openCards.reduce((count, card) => {
+      const key = `${card.suit}_${card.rank}`;
+      count[key] = (count[key] || 0) + 1;
+      return count;
+    }, {});
+
+    const cardsWithotPair = Object.values(groups).filter(count => count === 1).length;
+    if (cardsWithotPair >= 2) {
+      if (tries > 0) {
+        setTries(tries - 1);
+        return;
+      }
+      Lost();
+    }
+
+    openTheCard();
   };
 
-  //Use super force by id
   const useSuperForce = forceId => {
     if (isReadOnly) {
       return;
@@ -99,6 +149,7 @@ export const useGame = ({
     refreshCards,
     pickCard,
     useSuperForce,
+    reset,
   };
 
   return gameContext;

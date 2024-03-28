@@ -1,42 +1,70 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const useTimer = ({ resolution = 1000 }) => {
-  const [timerId, setTimerId] = useState();
-  const [accumulatedElapsed, setAccumulatedElapsed] = useState(0);
-  let [startTime, setStartTime] = useState();
+  const [state, setState] = useState({
+    timerId: null,
+    accumulatedElapsed: 0,
+    startTime: null,
+  });
+
   const [tick, setTick] = useState();
 
   const updateTick = () => setTick(new Date());
 
   const start = () => {
-    clearInterval(timerId);
-    setAccumulatedElapsed(0);
-    setStartTime(new Date());
-    setTimerId(setInterval(updateTick, resolution));
-    updateTick();
+    setState(current => {
+      clearInterval(current.timerId);
+      updateTick();
+      return {
+        timerId: setInterval(updateTick, resolution),
+        accumulatedElapsed: 0,
+        startTime: new Date(),
+      };
+    });
+  };
+
+  const reset = () => {
+    setState(current => {
+      clearInterval(current.timerId);
+      updateTick();
+      return {
+        timerId: null,
+        accumulatedElapsed: 0,
+        startTime: null,
+      };
+    });
   };
 
   const stop = () => {
-    clearInterval(timerId);
-    if (startTime) {
-      setAccumulatedElapsed(accumulatedElapsed + (new Date() - startTime));
-    }
-    setStartTime(null);
-    updateTick();
+    setState(current => {
+      clearInterval(current.timerId);
+      updateTick();
+      return {
+        timerId: null,
+        accumulatedElapsed: current.accumulatedElapsed + (current.startTime ? new Date() - current.startTime : 0),
+        startTime: null,
+      };
+    });
   };
 
-  const resume = () => {
-    // if (startTime) {
-    //   return;
-    // }
-    clearInterval(timerId);
-    setStartTime(new Date());
-    setTimerId(setInterval(updateTick, resolution));
-    updateTick();
-  };
+  const resume = useCallback(() => {
+    setState(current => {
+      if (current.startTime) {
+        return current;
+      }
+      clearInterval(current.timerId);
+      updateTick();
+      const result = {
+        ...current,
+        timerId: setInterval(updateTick, resolution),
+        startTime: new Date(),
+      };
+      return result;
+    });
+  }, [state]);
 
   const getElapsed = () => {
-    const duration = accumulatedElapsed + (startTime ? new Date() - startTime : 0);
+    const duration = state.accumulatedElapsed + (state.startTime ? new Date() - state.startTime : 0);
     return {
       totalMilliseconds: duration,
       totalSeconds: Math.floor(duration / 1000),
@@ -47,10 +75,12 @@ export const useTimer = ({ resolution = 1000 }) => {
   };
 
   return {
+    ...state,
     tick,
     start,
     stop,
     resume,
+    reset,
     getElapsed,
   };
 };

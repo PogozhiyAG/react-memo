@@ -15,7 +15,7 @@ export const SuperForces = {
         closedCards.forEach(c => (c.open = false));
         game.refreshCards();
         game.setIsReadOnly(false);
-        game.timer.resume();
+        game.timer.start();
       }, 5000);
     },
   },
