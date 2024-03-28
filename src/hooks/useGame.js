@@ -15,10 +15,10 @@ const defaultSuperforces = {
   2: 1,
 };
 
-const STATUS_LOST = "STATUS_LOST";
-const STATUS_WON = "STATUS_WON";
-const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
-const STATUS_PREVIEW = "STATUS_PREVIEW";
+export const STATUS_LOST = "STATUS_LOST";
+export const STATUS_WON = "STATUS_WON";
+export const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
+export const STATUS_PREVIEW = "STATUS_PREVIEW";
 
 export const useGame = ({
   level = 1,
@@ -102,7 +102,7 @@ export const useGame = ({
 
     const cardsWithotPair = Object.values(groups).filter(count => count === 1).length;
     if (cardsWithotPair >= 2) {
-      if (tries > 0) {
+      if (tries > 1) {
         setTries(tries - 1);
         return;
       }
