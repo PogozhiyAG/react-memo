@@ -12,7 +12,7 @@ import { Achievement } from "../Achievement/Achievement";
 
 export function EndGameModal({ game }) {
   const isWon = game.gameStatus === STATUS_WON;
-  const useLeaderBoard = game.level >= 1; //TODO
+  const useLeaderBoard = game.level >= 3;
   const elapsed = game.timer.getElapsed();
   const achievementIds = isWon
     ? Object.keys(Acheivements)
