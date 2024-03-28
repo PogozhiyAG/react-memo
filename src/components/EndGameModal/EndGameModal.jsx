@@ -75,7 +75,7 @@ export function EndGameModal({ game }) {
 
       <div className={styles.achievementContainer}>
         {achievementIds.map(aid => (
-          <Achievement id={aid} active />
+          <Achievement key={aid} id={aid} active />
         ))}
       </div>
 

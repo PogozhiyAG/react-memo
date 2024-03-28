@@ -50,8 +50,13 @@ export const LeaderboardPage = () => {
               <div className={styles.tableCell}># {i + 1}</div>
               <div className={styles.tableCell}>{r.name}</div>
               <div className={cn(styles.tableCell, styles.achievementsContainer)}>
-                {Object.keys(Acheivements).map(aid => (
-                  <Achievement id={aid} active={r.achievements.includes(Number(aid))} className={styles.achievement} />
+                {Object.keys(Acheivements).map((aid, i) => (
+                  <Achievement
+                    key={i}
+                    id={aid}
+                    active={r.achievements.includes(Number(aid))}
+                    className={styles.achievement}
+                  />
                 ))}
               </div>
               <div className={styles.tableCell}>{formatTime(r.time)}</div>
