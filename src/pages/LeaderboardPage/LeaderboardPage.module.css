@@ -26,7 +26,7 @@
 
 .tableContent{
     display: grid;
-    grid-template-columns: 2fr 6fr 3fr;
+    grid-template-columns: 2fr 6fr 3fr 3fr;
     row-gap: 0.5em;
     font-family: Roboto;
     margin-top: 2em;
@@ -38,15 +38,24 @@
     
 }
 
-.tableCell:nth-child(3n - 2){    
+.tableCell:nth-child(4n - 3){    
     border-radius: 4px 0 0 4px;
 }
 
-.tableCell:nth-child(3n){
+.tableCell:nth-child(4n){
     text-align: right;
     border-radius: 0 4px 4px 0;
 }
 
 .columnHeading {
     color: #999999
+}
+
+.achievementsContainer{
+    display: flex;
+    gap: 10px;
+}
+
+.achievement{
+    width: 20px;
 }

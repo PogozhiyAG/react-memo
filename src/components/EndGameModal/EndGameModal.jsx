@@ -6,8 +6,20 @@ import deadImageUrl from "./images/dead.png";
 import celebrationImageUrl from "./images/celebration.png";
 import { useContext, useEffect, useState } from "react";
 import { LeaderboardContext } from "../../context/LeaderboardContext";
+import { STATUS_WON } from "../../hooks/useGame";
+import { Acheivements } from "../../hooks/useAchievements";
+import { Achievement } from "../Achievement/Achievement";
 
-export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameDurationSeconds, onClick }) {
+export function EndGameModal({ game }) {
+  const isWon = game.gameStatus === STATUS_WON;
+  const useLeaderBoard = game.level >= 3;
+  const elapsed = game.timer.getElapsed();
+  const achievementIds = isWon
+    ? Object.keys(Acheivements)
+        .filter(k => Acheivements[k].evaluate(game))
+        .map(k => Number(k))
+    : [];
+
   const [isNeedSubmitResults, setIsNeedSubmitResults] = useState(false);
   const [user, setUser] = useState();
   const [title, setTitle] = useState(isWon ? "Вы победили!" : "Вы проиграли!");
@@ -17,8 +29,6 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
 
   const imgAlt = isWon ? "celebration emodji" : "dead emodji";
 
-  const duration = gameDurationMinutes * 60 + gameDurationSeconds;
-
   useEffect(() => {
     if (isWon && useLeaderBoard) {
       loadLeaders();
@@ -27,7 +37,7 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
 
   useEffect(() => {
     if (isWon && useLeaderBoard) {
-      const isInLeaderBoard = resultIsInLeaderBoard(duration);
+      const isInLeaderBoard = resultIsInLeaderBoard(elapsed.totalSeconds);
       setIsNeedSubmitResults(isInLeaderBoard);
       setTitle("Вы попали на лидерборд!");
     }
@@ -37,10 +47,11 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
     if (isNeedSubmitResults && user) {
       await sendGameResult({
         name: user,
-        time: duration,
+        time: elapsed.totalSeconds,
+        acheivements: achievementIds,
       });
     }
-    onClick();
+    game.reset();
   };
 
   return (
@@ -48,11 +59,24 @@ export function EndGameModal({ isWon, useLeaderBoard, gameDurationMinutes, gameD
       <img className={styles.image} src={imgSrc} alt={imgAlt} />
       <h2 className={styles.title}>{title}</h2>
       {isNeedSubmitResults && (
-        <input value={user} onChange={e => setUser(e.target.value)} placeholder="Пользователь"></input>
+        <input
+          value={user}
+          onChange={e => setUser(e.target.value)}
+          placeholder="Пользователь"
+          className={styles.inputText}
+        ></input>
       )}
+
       <p className={styles.description}>Затраченное время:</p>
+
       <div className={styles.time}>
-        {gameDurationMinutes.toString().padStart("2", "0")}.{gameDurationSeconds.toString().padStart("2", "0")}
+        {elapsed.minutes.toString().padStart("2", "0")}.{elapsed.seconds.toString().padStart("2", "0")}
+      </div>
+
+      <div className={styles.achievementContainer}>
+        {achievementIds.map(aid => (
+          <Achievement key={aid} id={aid} active />
+        ))}
       </div>
 
       <Button onClick={handleOnClick}>Начать сначала</Button>

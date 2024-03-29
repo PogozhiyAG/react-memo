@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { GamePage } from "./pages/GamePage/GamePage";
 import { SelectLevelPage } from "./pages/SelectLevelPage/SelectLevelPage";
 import { LeaderboardPage } from "./pages/LeaderboardPage/LeaderboardPage";
+import { TestPage } from "./pages/TestPage/TestPage";
 
 export const router = createBrowserRouter(
   [
@@ -10,12 +11,16 @@ export const router = createBrowserRouter(
       element: <SelectLevelPage />,
     },
     {
-      path: "/game/:pairsCount/:tryCount",
+      path: "/game/:level/:tryCount",
       element: <GamePage />,
     },
     {
       path: "/leaderboard",
       element: <LeaderboardPage />,
+    },
+    {
+      path: "/test",
+      element: <TestPage />,
     },
   ],
   /**

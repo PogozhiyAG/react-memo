@@ -1,7 +1,7 @@
 .container {
-  width: 672px;
+  width: 1024px;
   margin: 0 auto;
-  padding: 26px;
+  padding: 43px;
   padding-top: 22px;
   box-sizing: border-box;
 }
@@ -11,6 +11,7 @@
   flex-direction: row;
   gap: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .modalContainer {
@@ -75,4 +76,9 @@
   line-height: 32px;
 
   margin-bottom: -12px;
+}
+
+.superforcesComtainer{
+  display: flex;
+  gap: 12px
 }

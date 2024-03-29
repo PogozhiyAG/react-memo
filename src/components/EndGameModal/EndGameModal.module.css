@@ -1,6 +1,6 @@
 .modal {
   width: 480px;
-  height: 459px;
+  height: 634px;
   border-radius: 12px;
   background: #c2f5ff;
   display: flex;
@@ -23,7 +23,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 48px;
-
+  text-align: center;
   margin-bottom: 28px;
 }
 
@@ -35,8 +35,9 @@
   font-style: normal;
   font-weight: 400;
   line-height: 32px;
-
+  margin-top: 20px;
   margin-bottom: 10px;
+  
 }
 
 .time {
@@ -46,6 +47,26 @@
   font-style: normal;
   font-weight: 400;
   line-height: 72px;
+  
+}
 
-  margin-bottom: 40px;
+.inputText {  
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 24px;
+  text-align: center;
+  font-family: Roboto;
+  font-weight: 400;
+  line-height: 32px;
+  padding: 0.3em;
+  width: 276px;
+}
+
+.achievementContainer{
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 10px
+
 }

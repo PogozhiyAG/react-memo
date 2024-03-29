@@ -3,6 +3,9 @@ import { Button } from "../../components/Button/Button";
 import styles from "./LeaderboardPage.module.css";
 import { LeaderboardContext } from "../../context/LeaderboardContext";
 import React, { useContext, useEffect } from "react";
+import { Achievement } from "../../components/Achievement/Achievement";
+import { Acheivements } from "../../hooks/useAchievements";
+import cn from "classnames";
 
 export const LeaderboardPage = () => {
   const { leaderBoard, loadLeaders } = useContext(LeaderboardContext);
@@ -36,6 +39,9 @@ export const LeaderboardPage = () => {
             <span className={styles.columnHeading}>Пользователь</span>
           </div>
           <div className={styles.tableCell}>
+            <span className={styles.columnHeading}>Достижения</span>
+          </div>
+          <div className={styles.tableCell}>
             <span className={styles.columnHeading}>Время</span>
           </div>
 
@@ -43,6 +49,16 @@ export const LeaderboardPage = () => {
             <React.Fragment key={i}>
               <div className={styles.tableCell}># {i + 1}</div>
               <div className={styles.tableCell}>{r.name}</div>
+              <div className={cn(styles.tableCell, styles.achievementsContainer)}>
+                {Object.keys(Acheivements).map((aid, i) => (
+                  <Achievement
+                    key={i}
+                    id={aid}
+                    active={r.achievements.includes(Number(aid))}
+                    className={styles.achievement}
+                  />
+                ))}
+              </div>
               <div className={styles.tableCell}>{formatTime(r.time)}</div>
             </React.Fragment>
           ))}

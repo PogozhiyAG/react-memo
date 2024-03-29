@@ -15,17 +15,17 @@ export function SelectLevelPage() {
         <h1 className={styles.title}>Выбери сложность</h1>
         <ul className={styles.levels}>
           <li className={styles.level}>
-            <Link className={styles.levelLink} to={`/game/3/${tryCount}`}>
+            <Link className={styles.levelLink} to={`/game/1/${tryCount}`}>
               1
             </Link>
           </li>
           <li className={styles.level}>
-            <Link className={styles.levelLink} to={`/game/6/${tryCount}`}>
+            <Link className={styles.levelLink} to={`/game/2/${tryCount}`}>
               2
             </Link>
           </li>
           <li className={styles.level}>
-            <Link className={styles.levelLink} to={`/game/9/${tryCount}`}>
+            <Link className={styles.levelLink} to={`/game/3/${tryCount}`}>
               3
             </Link>
           </li>
@@ -43,7 +43,7 @@ export function SelectLevelPage() {
           </label>
         </div>
         <div className={styles.contentRow}>
-          <Button onClick={() => navigateTo(`/game/3/${tryCount}`)}>Играть</Button>
+          <Button onClick={() => navigateTo(`/game/1/${tryCount}`)}>Играть</Button>
         </div>
         <div className={styles.contentRow}>
           <Link to="/leaderboard" className={styles.link}>
