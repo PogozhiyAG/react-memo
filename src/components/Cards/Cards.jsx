@@ -46,9 +46,9 @@ export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
         {game.gameStatus === STATUS_IN_PROGRESS && (
           <>
             <div className={styles.tries}>❤: {game.tries}</div>
-            <div className={styles.superforcesComtainer}>
-              {Object.keys(game.superForces).map((k, i) => (
-                <SuperForce key={i} id={k} count={game.superForces[k]} onClick={() => game.useSuperForce(k)} />
+            <div className={styles.superforcesContainer}>
+              {Object.keys(game.superForcesRest).map((k, i) => (
+                <SuperForce key={i} id={k} count={game.superForcesRest[k]} onClick={() => game.useSuperForce(k)} />
               ))}
             </div>
             <Button onClick={game.reset}>Начать заново</Button>

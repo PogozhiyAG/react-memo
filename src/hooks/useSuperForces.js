@@ -1,6 +1,6 @@
 import { shuffle } from "lodash";
 
-export const SuperForces = {
+const SuperForces = {
   1: {
     name: "Прозрение",
     imageUrl: "./images/insight.svg",
@@ -39,3 +39,5 @@ export const SuperForces = {
     },
   },
 };
+
+export const useSuperForces = () => SuperForces;

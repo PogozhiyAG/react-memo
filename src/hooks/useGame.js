@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { generateDeck } from "../utils/cards";
-import { SuperForces } from "./useSuperForces";
+import { useSuperForces } from "./useSuperForces";
 import { useStopwatch } from "./useStopwatch";
 import { shuffle } from "lodash";
 
@@ -31,11 +31,12 @@ export const useGame = ({
 }) => {
   const [cards, setCards] = useState([]);
   const [tries, setTries] = useState(0);
-  const [superForces, setSuperForces] = useState({});
+  const [superForcesRest, setSuperForcesRest] = useState({});
   const [isReadOnly, setIsReadOnly] = useState();
   const [gameStatus, setGameStatus] = useState();
   const timer = useStopwatch({ resolution: 300 });
   const gameLog = useRef([]);
+  const superForces = useSuperForces();
 
   const reset = () => setGameStatus(STATUS_PREVIEW);
 
@@ -46,7 +47,7 @@ export const useGame = ({
       const deck = shuffle(generateDeck(levelPairCount[level]).map(c => ({ ...c, open: true })));
       setCards(deck);
       setTries(tryCount);
-      setSuperForces({ ...availableSuperForces });
+      setSuperForcesRest({ ...availableSuperForces });
       setIsReadOnly(true);
       gameLog.current = [];
       timer.reset();
@@ -116,15 +117,15 @@ export const useGame = ({
       return;
     }
 
-    if (superForces[forceId] > 0) {
-      setSuperForces({
-        ...superForces,
-        [forceId]: superForces[forceId] - 1,
+    if (superForcesRest[forceId] > 0) {
+      setSuperForcesRest({
+        ...superForcesRest,
+        [forceId]: superForcesRest[forceId] - 1,
       });
 
       logEvent(EVENT_TYPE_USE_SUPERFORCE, forceId);
 
-      SuperForces[forceId].use(gameContext);
+      superForces[forceId].use(gameContext);
     }
   };
 
@@ -145,8 +146,8 @@ export const useGame = ({
     isReadOnly,
     setIsReadOnly,
 
-    superForces,
-    setSuperForces,
+    superForcesRest,
+    setSuperForcesRest,
 
     timer,
 
