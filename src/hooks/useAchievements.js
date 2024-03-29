@@ -11,6 +11,6 @@ export const Acheivements = {
     name: "Без использования суперсил",
     activeImageUrl: "./images/magicBall_active.svg",
     inactiveImageUrl: "./images/magicBall_inactive.svg",
-    evaluate: game => game.gameLog.findIndex(l => l.eventType === EVENT_TYPE_USE_SUPERFORCE) === -1,
+    evaluate: game => game.gameLog.current.findIndex(l => l.eventType === EVENT_TYPE_USE_SUPERFORCE) === -1,
   },
 };

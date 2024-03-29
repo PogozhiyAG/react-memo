@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { generateDeck } from "../utils/cards";
 import { SuperForces } from "./useSuperForces";
 import { useStopwatch } from "./useStopwatch";
@@ -32,10 +32,10 @@ export const useGame = ({
   const [cards, setCards] = useState([]);
   const [tries, setTries] = useState(0);
   const [superForces, setSuperForces] = useState({});
-  const timer = useStopwatch({ resolution: 300 });
   const [isReadOnly, setIsReadOnly] = useState();
   const [gameStatus, setGameStatus] = useState();
-  const [gameLog, setGameLog] = useState([]);
+  const timer = useStopwatch({ resolution: 300 });
+  const gameLog = useRef([]);
 
   const reset = () => setGameStatus(STATUS_PREVIEW);
 
@@ -47,8 +47,8 @@ export const useGame = ({
       setCards(deck);
       setTries(tryCount);
       setSuperForces({ ...availableSuperForces });
-      setGameLog([]);
       setIsReadOnly(true);
+      gameLog.current = [];
       timer.reset();
 
       const intervalId = setInterval(() => setGameStatus(STATUS_IN_PROGRESS), previewDuration * 1000);
@@ -73,15 +73,7 @@ export const useGame = ({
     setGameStatus(STATUS_LOST);
   };
 
-  const logEvent = (eventType, data) =>
-    setGameLog([
-      ...gameLog,
-      {
-        time: new Date(),
-        eventType,
-        data,
-      },
-    ]);
+  const logEvent = (eventType, data) => gameLog.current.push({ time: new Date(), eventType, data });
 
   const pickCard = card => {
     if (isReadOnly || card.open || gameStatus !== STATUS_IN_PROGRESS) {
@@ -106,8 +98,8 @@ export const useGame = ({
       return count;
     }, {});
 
-    const cardsWithotPair = Object.values(groups).filter(count => count === 1).length;
-    if (cardsWithotPair >= 2) {
+    const cardsWithoutPair = Object.values(groups).filter(count => count === 1).length;
+    if (cardsWithoutPair >= 2) {
       if (tries > 1) {
         setTries(tries - 1);
         logEvent(EVENT_TYPE_USE_LIFE);
