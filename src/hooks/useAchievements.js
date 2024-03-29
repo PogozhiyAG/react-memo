@@ -1,6 +1,6 @@
 import { EVENT_TYPE_USE_SUPERFORCE } from "./useGame";
 
-export const Acheivements = {
+const Achievements = {
   1: {
     name: "На сложном уровне",
     activeImageUrl: "./images/hardLevel_active.svg",
@@ -14,3 +14,5 @@ export const Acheivements = {
     evaluate: game => game.gameLog.current.findIndex(l => l.eventType === EVENT_TYPE_USE_SUPERFORCE) === -1,
   },
 };
+
+export const useAchievements = () => Achievements;

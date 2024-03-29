@@ -4,12 +4,12 @@ import styles from "./LeaderboardPage.module.css";
 import { LeaderboardContext } from "../../context/LeaderboardContext";
 import React, { useContext, useEffect } from "react";
 import { Achievement } from "../../components/Achievement/Achievement";
-import { Acheivements } from "../../hooks/useAchievements";
 import cn from "classnames";
+import { useAchievements } from "../../hooks/useAchievements";
 
 export const LeaderboardPage = () => {
   const { leaderBoard, loadLeaders } = useContext(LeaderboardContext);
-
+  const achievements = useAchievements();
   const navigateTo = useNavigate();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const LeaderboardPage = () => {
               <div className={styles.tableCell}># {i + 1}</div>
               <div className={styles.tableCell}>{r.name}</div>
               <div className={cn(styles.tableCell, styles.achievementsContainer)}>
-                {Object.keys(Acheivements).map((aid, i) => (
+                {Object.keys(achievements).map((aid, i) => (
                   <Achievement
                     key={i}
                     id={aid}

@@ -1,9 +1,11 @@
-import { Acheivements } from "../../hooks/useAchievements";
+import { useAchievements } from "../../hooks/useAchievements";
 
 const images = require.context("./", true);
 
 export const Achievement = ({ id, active = true, className }) => {
-  const achievment = Acheivements[id];
+  const achievements = useAchievements();
+  const achievment = achievements[id];
+
   return (
     <img
       src={images(active ? achievment.activeImageUrl : achievment.inactiveImageUrl)}

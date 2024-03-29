@@ -1,22 +1,21 @@
 import styles from "./EndGameModal.module.css";
-
 import { Button } from "../Button/Button";
-
 import deadImageUrl from "./images/dead.png";
 import celebrationImageUrl from "./images/celebration.png";
 import { useContext, useEffect, useState } from "react";
 import { LeaderboardContext } from "../../context/LeaderboardContext";
 import { STATUS_WON } from "../../hooks/useGame";
-import { Acheivements } from "../../hooks/useAchievements";
 import { Achievement } from "../Achievement/Achievement";
+import { useAchievements } from "../../hooks/useAchievements";
 
 export function EndGameModal({ game }) {
   const isWon = game.gameStatus === STATUS_WON;
   const useLeaderBoard = game.level >= 3;
   const elapsed = game.timer.getElapsed();
+  const achievements = useAchievements();
   const achievementIds = isWon
-    ? Object.keys(Acheivements)
-        .filter(k => Acheivements[k].evaluate(game))
+    ? Object.keys(achievements)
+        .filter(k => achievements[k].evaluate(game))
         .map(k => Number(k))
     : [];
 
