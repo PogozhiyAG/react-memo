@@ -3,6 +3,7 @@ import { shuffle } from "lodash";
 const SuperForces = {
   1: {
     name: "Прозрение",
+    description: "На 5 секунд показываются все карты. Таймер длительности игры на это время останавливается",
     imageUrl: "./images/insight.svg",
     use: game => {
       const closedCards = game.cards.filter(c => !c.open);
@@ -22,6 +23,7 @@ const SuperForces = {
 
   2: {
     name: "Алохомора",
+    description: "Открывается случайная пара карт",
     imageUrl: "./images/alohomora.svg",
     use: game => {
       let closedCards = game.cards.filter(c => !c.open);

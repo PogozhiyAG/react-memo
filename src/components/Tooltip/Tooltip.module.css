@@ -1,0 +1,15 @@
+.container {
+    position: absolute;
+    padding: 1em;
+    background-color: #C2F5FF;
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;    
+    z-index: 10;
+
+    max-width: 200px;
+
+    box-shadow: 12px 12px 10px 5px rgba(0, 0, 0, .5);
+}
