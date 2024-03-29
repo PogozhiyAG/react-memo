@@ -4,6 +4,7 @@ import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
 import { STATUS_IN_PROGRESS, STATUS_LOST, STATUS_PREVIEW, STATUS_WON, useGame } from "../../hooks/useGame";
 import { SuperForce } from "../SuperForce/SuperForce";
+import { useEffect } from "react";
 
 /**
  * Основной компонент игры, внутри него находится вся игровая механика и логика.
@@ -13,6 +14,8 @@ import { SuperForce } from "../SuperForce/SuperForce";
  */
 export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
   const game = useGame({ level, tryCount, availableSuperForces: { 1: 1, 2: 2 } });
+
+  useEffect(() => game.reset(), []);
 
   const isGameEnded = game.gameStatus === STATUS_LOST || game.gameStatus === STATUS_WON;
   const elapsed = game.timer.getElapsed();
@@ -32,7 +35,7 @@ export function Cards({ level = 1, tryCount = 1, previewSeconds = 5 }) {
                 <div className={styles.timerDescription}>min</div>
                 <div>{elapsed.minutes.toString().padStart("2", "0")}</div>
               </div>
-              .
+              :
               <div className={styles.timerValue}>
                 <div className={styles.timerDescription}>sec</div>
                 <div>{elapsed.seconds.toString().padStart("2", "0")}</div>

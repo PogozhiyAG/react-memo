@@ -37,40 +37,31 @@ export const useGame = ({
   const [gameStatus, setGameStatus] = useState();
   const [gameLog, setGameLog] = useState([]);
 
-  const [resetFlag, setResetFlag] = useState();
-  const [startFlag, setStartFlag] = useState();
-
-  const reset = () => setResetFlag(new Date());
+  const reset = () => setGameStatus(STATUS_PREVIEW);
 
   const refreshCards = () => setCards([...cards]);
 
   useEffect(() => {
-    setGameStatus(STATUS_PREVIEW);
-    const deck = shuffle(generateDeck(levelPairCount[level]).map(c => ({ ...c, open: true })));
-    setCards(deck);
-    setTries(tryCount);
-    setSuperForces({ ...availableSuperForces });
-    setIsReadOnly(true);
-    setGameLog([]);
-    timer.reset();
-    setStartFlag(new Date());
-  }, [resetFlag]);
+    if (gameStatus === STATUS_PREVIEW) {
+      const deck = shuffle(generateDeck(levelPairCount[level]).map(c => ({ ...c, open: true })));
+      setCards(deck);
+      setTries(tryCount);
+      setSuperForces({ ...availableSuperForces });
+      setGameLog([]);
+      setIsReadOnly(true);
+      timer.reset();
 
-  useEffect(() => {
-    if (!startFlag) {
-      return;
+      const intervalId = setInterval(() => setGameStatus(STATUS_IN_PROGRESS), previewDuration * 1000);
+      return () => clearInterval(intervalId);
     }
 
-    let timeout = setTimeout(() => {
-      setGameStatus(STATUS_IN_PROGRESS);
+    if (gameStatus === STATUS_IN_PROGRESS) {
       cards.forEach(c => (c.open = false));
       refreshCards();
       setIsReadOnly(false);
       timer.start();
-    }, previewDuration * 1000);
-
-    return () => clearTimeout(timeout);
-  }, [startFlag]);
+    }
+  }, [gameStatus]);
 
   const Won = () => {
     timer.stop();
