@@ -1,45 +1,39 @@
+import { useRef } from "react";
 import { useState, useEffect } from "react";
 
 export const useStopwatch = ({ resolution = 1000 }) => {
-  const [isRunning, setIsRunning] = useState(false);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [timerId, setTimerId] = useState();
-  const [startTime, setStartTime] = useState();
+  const intervalId = useRef();
+  const timeElapsed = useRef(0);
+  const startTime = useRef();
   const [tick, setTick] = useState();
 
-  useEffect(() => {
-    if (isRunning) {
-      setStartTime(new Date());
-      setTimerId(
-        setInterval(() => {
-          setTick(new Date());
-        }, resolution),
-      );
-      return () => clearInterval(timerId);
-    } else {
-      setStartTime(null);
-      clearInterval(timerId);
-    }
-  }, [isRunning]);
+  useEffect(() => clearInterval(intervalId.current), []);
 
   const start = () => {
-    setIsRunning(true);
+    if (intervalId.current) {
+      return;
+    }
+    startTime.current = new Date();
+    intervalId.current = setInterval(() => setTick(new Date()), resolution);
   };
 
   const stop = () => {
-    if (startTime) {
-      setTimeElapsed(c => c + (new Date() - startTime));
+    if (!intervalId.current) {
+      return;
     }
-    setIsRunning(false);
+    clearInterval(intervalId.current);
+    intervalId.current = null;
+    timeElapsed.current = timeElapsed.current + (new Date() - startTime.current);
   };
 
   const reset = () => {
-    setTimeElapsed(0);
-    setIsRunning(false);
+    clearInterval(intervalId.current);
+    intervalId.current = null;
+    timeElapsed.current = 0;
   };
 
   const getElapsed = () => {
-    const duration = timeElapsed + (startTime ? new Date() - startTime : 0);
+    const duration = timeElapsed.current + (intervalId.current ? new Date() - startTime.current : 0);
     return {
       totalMilliseconds: duration,
       totalSeconds: Math.floor(duration / 1000),
@@ -49,5 +43,5 @@ export const useStopwatch = ({ resolution = 1000 }) => {
     };
   };
 
-  return { start, stop, reset, getElapsed, isRunning, tick };
+  return { start, stop, reset, getElapsed, tick };
 };
